@@ -4,15 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة النتائج - وزارة التربية العراقية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-green: #3b8e41;
-            --bg-color: #f3f4f6;
+            --bg-color: #f8f9fa;
             --text-main: #111827;
             --text-muted: #6b7280;
             --border-color: #e5e7eb;
             --white: #ffffff;
+            --danger-bg: #fce8e8;
+            --danger-text: #b33a3a;
         }
 
         * {
@@ -53,32 +55,30 @@
             max-width: 450px;
             margin: 0 auto;
             padding: 40px 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             text-align: center;
+            border: 1px solid var(--border-color);
         }
 
         .login-container .logo-img {
-            width: 160px; /* تم زيادة الحجم */
+            width: 180px; /* تكبير الشعار في الصفحة الرئيسية */
             height: auto;
-            margin-bottom: 15px;
-        }
-
-        .login-container h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
+            margin-bottom: 20px;
         }
 
         .login-container h2 {
             font-size: 20px;
             margin-bottom: 10px;
             color: var(--text-main);
+            font-weight: 800;
         }
 
         .login-container p {
             color: var(--text-muted);
             font-size: 14px;
             margin-bottom: 25px;
+            line-height: 1.6;
         }
 
         .form-group {
@@ -95,9 +95,9 @@
 
         .form-group input {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 15px;
             outline: none;
             transition: border-color 0.2s;
@@ -121,10 +121,10 @@
             background-color: var(--primary-green);
             color: var(--white);
             border: none;
-            padding: 14px;
+            padding: 15px;
             font-size: 16px;
             font-weight: 700;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.2s;
         }
@@ -141,71 +141,90 @@
 
         /* --- Results Page Styles --- */
         .results-wrapper {
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
             display: flex;
             gap: 20px;
         }
 
+        .results-sidebar-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
         .results-sidebar, .results-main {
             background: var(--white);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border-color);
         }
 
-        .results-sidebar {
-            flex: 1;
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .sidebar-header .logo-img {
+            width: 130px; /* تكبير الشعار في صفحة النتيجة */
+            height: auto;
+        }
+
+        .exam-title {
             text-align: center;
-        }
-
-        .results-sidebar .logo-img {
-            width: 140px; /* تم زيادة الحجم */
-            margin-bottom: 10px;
-        }
-
-        .results-sidebar h3 {
             font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .results-sidebar h4 {
-            font-size: 15px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 30px;
+            line-height: 1.6;
         }
 
         .student-info-grid {
             display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 15px;
+            grid-template-columns: 100px 1fr;
+            gap: 15px 10px;
             text-align: right;
             font-size: 14px;
             margin-bottom: 30px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 20px;
         }
 
         .student-info-grid strong {
             color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .student-info-grid span {
+            font-weight: 800;
+            color: var(--text-main);
         }
 
         .status-badge {
             background-color: #e6f4ea;
             color: #1e8e3e;
-            padding: 4px 12px;
-            border-radius: 20px;
+            padding: 4px 14px;
+            border-radius: 4px;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
+            display: inline-block;
+        }
+
+        .status-badge.failed {
+            background-color: var(--danger-bg);
+            color: var(--danger-text);
         }
 
         .btn-logout {
             background: var(--white);
             border: 1px solid var(--border-color);
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 12px 20px;
+            border-radius: 6px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 700;
+            color: var(--text-main);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -218,23 +237,32 @@
             background-color: var(--bg-color);
         }
 
+        .sidebar-footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+
         .results-main {
-            flex: 2;
+            flex: 1.8;
         }
 
         .results-main h2 {
-            text-align: center;
+            text-align: right;
             margin-bottom: 20px;
-            font-size: 22px;
+            font-size: 20px;
+            font-weight: 800;
         }
 
         .warning-box {
-            background-color: #fdf2f2;
-            color: #c53030;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
+            background-color: var(--danger-bg);
+            color: var(--danger-text);
+            padding: 14px 15px;
+            border-radius: 4px;
+            text-align: right;
             font-size: 14px;
+            font-weight: 500;
             margin-bottom: 25px;
         }
 
@@ -245,38 +273,29 @@
 
         .grades-table th {
             text-align: right;
-            padding-bottom: 15px;
+            padding: 15px;
             color: var(--text-main);
-            font-size: 16px;
-            border-bottom: 2px solid var(--border-color);
+            font-size: 15px;
+            font-weight: 800;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .grades-table td {
-            padding: 15px 0;
-            border-bottom: 1px solid var(--border-color);
+            padding: 15px;
             font-size: 15px;
-            font-weight: 500;
+            font-weight: 700;
+            border-bottom: 1px solid #f3f4f6;
+            color: var(--text-main);
         }
 
-        .grades-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .error-msg {
-            color: #c53030;
-            font-size: 13px;
-            margin-top: 10px;
-            display: none;
-            text-align: right;
+        .fail-row {
+            background-color: var(--danger-bg);
         }
 
         /* --- Responsive Design --- */
-        @media (max-width: 768px) {
+        @media (max-width: 850px) {
             .results-wrapper {
                 flex-direction: column;
-            }
-            .student-info-grid {
-                grid-template-columns: 1fr 1fr;
             }
         }
     </style>
@@ -286,9 +305,7 @@
     <div id="loginPage" class="page active">
         <div class="login-container">
             <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية العراقية" class="logo-img">
-            <h1>جمهورية العراق</h1>
-            <h1>وزارة التربية</h1>
-            <br>
+            
             <h2>تسجيل الدخول</h2>
             <p>اللجنة الدائمة للامتحانات العامة لعام 2026/2025<br>يرجى إدخال المعلومات بشكل صحيح لتسجيل الدخول إلى المنصة.</p>
 
@@ -304,7 +321,7 @@
                 
                 <div class="timer" id="timerDisplay">02:00</div>
                 
-                <div id="errorMsg" class="error-msg">الرقم الامتحاني أو حل المسألة غير صحيح.</div>
+                <div id="errorMsg" class="error-msg" style="color: #c53030; font-size: 13px; display: none; margin-bottom: 10px; text-align: right;">الرقم الامتحاني أو حل المسألة غير صحيح.</div>
                 
                 <button type="submit" class="btn-submit">تسجيل الدخول</button>
             </form>
@@ -314,45 +331,50 @@
 
     <div id="resultsPage" class="page">
         <div class="results-wrapper">
-            <div class="results-sidebar">
-                <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية العراقية" class="logo-img">
-                <h3>جمهورية العراق<br>وزارة التربية</h3>
-                <br>
-                <h4>اللجنة الدائمة للامتحانات العامة<br>لعام 2025/2024<br>الدور الأول</h4>
-                
-                <div class="student-info-grid">
-                    <strong>الاسم</strong>
-                    <span>آيات قصي الرباعي محمد عبدالله</span>
-                    
-                    <strong>اسم المدرسة</strong>
-                    <span>ثانوية المتفوقات للبنات</span>
-                    
-                    <strong>المديرية</strong>
-                    <span>كركوك</span>
-                    
-                    <strong>الفرع</strong>
-                    <span>علمي</span>
-                    
-                    <strong>المجموع</strong>
-                    <span>697</span>
-                    
-                    <strong>المعدل</strong>
-                    <span dir="ltr">%99.57</span>
-                    
-                    <strong>النتيجة النهائية</strong>
-                    <span class="status-badge">ناجح</span>
-                </div>
 
-                <button class="btn-logout" onclick="logout()">
-                    تسجيل الخروج
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                </button>
+            <div class="results-sidebar-container">
+                <div class="results-sidebar">
+                    <div class="sidebar-header">
+                        <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية العراقية" class="logo-img">
+                    </div>
+                    
+                    <h4 class="exam-title">اللجنة الدائمة للامتحانات العامة<br>لعام 2026/2025 الدور الأول</h4>
+                    
+                    <div class="student-info-grid">
+                        <strong>الاسم الرباعي</strong>
+                        <span>منتظر مالك اسماعيل ابوعريش</span>
+                        
+                        <strong>اسم المدرسة</strong>
+                        <span>اعدادية كربلاء للبنين</span>
+                        
+                        <strong>المديرية</strong>
+                        <span>ذي قار</span>
+                        
+                        <strong>الفرع</strong>
+                        <span>علمي</span>
+                        
+                        <strong>المجموع</strong>
+                        <span>0</span>
+                        
+                        <strong>المعدل</strong>
+                        <span dir="ltr">%0</span>
+                        
+                        <strong>النتيجة النهائية</strong>
+                        <div><span class="status-badge failed">معيد</span></div>
+                    </div>
+
+                    <button class="btn-logout" onclick="logout()">
+                        تسجيل الخروج
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; transform: rotate(180deg);"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    </button>
+                </div>
+                <div class="sidebar-footer">جميع الحقوق محفوظة © 2025 وزارة التربية العراقية</div>
             </div>
 
             <div class="results-main">
                 <h2>معلومات النتيجة</h2>
                 <div class="warning-box">
-                    ملاحظة: هذه النتيجة لا تُعد وثيقة رسمية، ويجب مراجعة المدرسة لاستلام النتيجة الرسمية.
+                    ملاحظة: هذه النتيجة لا تُعد وثيقة رسمية، ويجب الاعتماد على الوثائق الورقية الصادرة من الوزارة.
                 </div>
 
                 <table class="grades-table">
@@ -363,17 +385,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>الاسلامية</td><td>99</td></tr>
-                        <tr><td>العربية</td><td>100</td></tr>
-                        <tr><td>الانكليزية</td><td>99</td></tr>
-                        <tr><td>الاحياء</td><td>100</td></tr>
-                        <tr><td>الرياضيات</td><td>100</td></tr>
-                        <tr><td>الكيمياء</td><td>99</td></tr>
-                        <tr><td>الفيزياء</td><td>100</td></tr>
-                        <tr><td>اللغة الفرنسية</td><td>84</td></tr>
+                        <tr><td>الاسلامية</td><td>98</td></tr>
+                        <tr><td>العربية</td><td>93</td></tr>
+                        <tr class="fail-row"><td>الانكليزية</td><td>45</td></tr>
+                        <tr><td>الاحياء</td><td>65</td></tr>
+                        <tr><td>الرياضيات</td><td>50</td></tr>
+                        <tr class="fail-row"><td>الكيمياء</td><td>32</td></tr>
+                        <tr class="fail-row"><td>الفيزياء</td><td>41</td></tr>
+                        <tr class="fail-row"><td>اللغة الفرنسية</td><td>38</td></tr>
                     </tbody>
                 </table>
             </div>
+
         </div>
     </div>
 
@@ -382,49 +405,38 @@
         let currentCaptchaResult = 0;
         let timerInterval;
 
-        // دالة توليد مسألة رياضية عشوائية
         function generateCaptcha() {
-            const num1 = Math.floor(Math.random() * 50) + 10; // رقم بين 10 و 59
+            const num1 = Math.floor(Math.random() * 50) + 10;
             const num2 = Math.floor(Math.random() * 50) + 10;
             currentCaptchaResult = num1 + num2;
-            
             document.getElementById('captchaLabel').innerText = `كم حاصل جمع ${num1} + ${num2}؟`;
             document.getElementById('captchaAnswer').value = '';
         }
 
-        // دالة تشغيل المؤقت الزمني
         function startTimer(durationInSeconds) {
-            clearInterval(timerInterval); // مسح أي مؤقت سابق
+            clearInterval(timerInterval);
             let timer = durationInSeconds, minutes, seconds;
             const display = document.getElementById('timerDisplay');
-            
             timerInterval = setInterval(function () {
                 minutes = parseInt(timer / 60, 10);
                 seconds = parseInt(timer % 60, 10);
-
                 minutes = minutes < 10 ? "0" + minutes : minutes;
                 seconds = seconds < 10 ? "0" + seconds : seconds;
-
                 display.textContent = minutes + ":" + seconds;
-
                 if (--timer < 0) {
-                    // عند انتهاء الوقت، أعد تعيين المؤقت وقم بتوليد كابتشا جديدة كإجراء أمني
                     timer = durationInSeconds;
                     generateCaptcha();
                 }
             }, 1000);
         }
 
-        // تهيئة الصفحة عند التحميل
         window.onload = () => {
             generateCaptcha();
-            startTimer(120); // 120 ثانية = دقيقتان
+            startTimer(120);
         };
 
-        // معالجة تسجيل الدخول
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const examInput = document.getElementById('examNumber').value.trim();
             const captchaInput = parseInt(document.getElementById('captchaAnswer').value.trim(), 10);
             const errorElement = document.getElementById('errorMsg');
@@ -436,17 +448,15 @@
                 window.scrollTo(0, 0);
             } else {
                 errorElement.style.display = 'block';
-                generateCaptcha(); // تغيير الكابتشا عند الخطأ
+                generateCaptcha(); 
             }
         });
 
-        // معالجة تسجيل الخروج
         function logout() {
             document.getElementById('examNumber').value = '';
             document.getElementById('errorMsg').style.display = 'none';
             document.getElementById('resultsPage').classList.remove('active');
             document.getElementById('loginPage').classList.add('active');
-            
             generateCaptcha();
             startTimer(120);
             window.scrollTo(0, 0);
