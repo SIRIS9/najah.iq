@@ -62,7 +62,7 @@
         }
 
         .login-container .logo-img {
-            width: 180px; /* تكبير الشعار في الصفحة الرئيسية */
+            width: 180px;
             height: auto;
             margin-bottom: 20px;
         }
@@ -113,7 +113,7 @@
             font-size: 14px;
             margin-bottom: 20px;
             direction: ltr;
-            color: #c53030;
+            color: #000000;
         }
 
         .btn-submit {
@@ -170,7 +170,7 @@
         }
 
         .sidebar-header .logo-img {
-            width: 130px; /* تكبير الشعار في صفحة النتيجة */
+            width: 130px;
             height: auto;
         }
 
@@ -203,18 +203,13 @@
         }
 
         .status-badge {
-            background-color: #e6f4ea;
-            color: #1e8e3e;
+            background-color: var(--danger-bg);
+            color: var(--danger-text);
             padding: 4px 14px;
             border-radius: 4px;
             font-weight: 700;
             font-size: 13px;
             display: inline-block;
-        }
-
-        .status-badge.failed {
-            background-color: var(--danger-bg);
-            color: var(--danger-text);
         }
 
         .btn-logout {
@@ -307,7 +302,7 @@
             <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية العراقية" class="logo-img">
             
             <h2>تسجيل الدخول</h2>
-            <p>اللجنة الدائمة للامتحانات العامة لعام 2026/2025<br>يرجى إدخال المعلومات بشكل صحيح لتسجيل الدخول إلى المنصة.</p>
+            <p>اللجنة الدائمة للأمتحانات العامة لعام 2026/2025<br>يرجى إدخال المعلومات بشكل صحيح لتسجيل الدخول إلى المنصة.</p>
 
             <form id="loginForm">
                 <div class="form-group">
@@ -338,11 +333,11 @@
                         <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية العراقية" class="logo-img">
                     </div>
                     
-                    <h4 class="exam-title">اللجنة الدائمة للامتحانات العامة<br>لعام 2026/2025 الدور الأول</h4>
+                    <h4 class="exam-title">اللجنة الدائمة للأمتحانات العامة<br>لعام 2026/2025 الدور الأول</h4>
                     
                     <div class="student-info-grid">
                         <strong>الاسم الرباعي</strong>
-                        <span>منتظر مالك اسماعيل ابوعريش</span>
+                        <span>منتظر مالك اسماعيل مكطوف</span>
                         
                         <strong>اسم المدرسة</strong>
                         <span>اعدادية كربلاء للبنين</span>
@@ -360,7 +355,7 @@
                         <span dir="ltr">%0</span>
                         
                         <strong>النتيجة النهائية</strong>
-                        <div><span class="status-badge failed">معيد</span></div>
+                        <div><span class="status-badge">معيد</span></div>
                     </div>
 
                     <button class="btn-logout" onclick="logout()">
@@ -387,12 +382,11 @@
                     <tbody>
                         <tr><td>الاسلامية</td><td>98</td></tr>
                         <tr><td>العربية</td><td>93</td></tr>
-                        <tr class="fail-row"><td>الانكليزية</td><td>45</td></tr>
-                        <tr><td>الاحياء</td><td>65</td></tr>
-                        <tr><td>الرياضيات</td><td>50</td></tr>
-                        <tr class="fail-row"><td>الكيمياء</td><td>32</td></tr>
-                        <tr class="fail-row"><td>الفيزياء</td><td>41</td></tr>
-                        <tr class="fail-row"><td>اللغة الفرنسية</td><td>38</td></tr>
+                        <tr class="fail-row"><td>الانكليزية</td><td>م</td></tr>
+                        <tr class="fail-row"><td>الاحياء</td><td>م</td></tr>
+                        <tr class="fail-row"><td>الرياضيات</td><td>م</td></tr>
+                        <tr class="fail-row"><td>الكيمياء</td><td>م</td></tr>
+                        <tr class="fail-row"><td>الفيزياء</td><td>م</td></tr>
                     </tbody>
                 </table>
             </div>
