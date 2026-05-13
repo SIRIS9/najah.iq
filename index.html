@@ -13,7 +13,7 @@
             --text-muted: #6b7280;
             --border-color: #e5e7eb;
             --white: #ffffff;
-            --danger-bg: #fce8e8;
+            --danger-bg: #fde8e8; /* أحمر باهت مطابق للرسمي */
             --danger-text: #b33a3a;
         }
 
@@ -141,14 +141,14 @@
 
         /* --- Results Page Styles --- */
         .results-wrapper {
-            max-width: 950px;
+            max-width: 1050px; /* تم توسيع الحاوية لتطابق العرض الرسمي */
             margin: 0 auto;
             display: flex;
-            gap: 20px;
+            gap: 24px;
         }
 
         .results-sidebar-container {
-            flex: 1;
+            flex: 1; /* نسبة الشريط الجانبي */
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -186,10 +186,10 @@
         .student-info-grid {
             display: grid;
             grid-template-columns: 100px 1fr;
-            gap: 15px 10px;
+            gap: 16px 12px;
             text-align: right;
             font-size: 14px;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
         }
 
         .student-info-grid strong {
@@ -240,7 +240,7 @@
         }
 
         .results-main {
-            flex: 1.8;
+            flex: 2.2; /* تكبير مساحة الجدول لتبتعد العناصر عن بعضها */
         }
 
         .results-main h2 {
@@ -253,12 +253,12 @@
         .warning-box {
             background-color: var(--danger-bg);
             color: var(--danger-text);
-            padding: 14px 15px;
+            padding: 16px;
             border-radius: 4px;
             text-align: right;
             font-size: 14px;
             font-weight: 500;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .grades-table {
@@ -266,17 +266,30 @@
             border-collapse: collapse;
         }
 
+        .grades-table th, .grades-table td {
+            padding: 20px 25px; /* زيادة المساحة الداخلية للجدول */
+        }
+
+        .grades-table th:first-child,
+        .grades-table td:first-child {
+            text-align: right; /* إجبار المادة على اليمين */
+            width: 50%;
+        }
+
+        .grades-table th:last-child,
+        .grades-table td:last-child {
+            text-align: left; /* إجبار الدرجة على أقصى اليسار */
+            width: 50%;
+        }
+
         .grades-table th {
-            text-align: right;
-            padding: 15px;
             color: var(--text-main);
             font-size: 15px;
             font-weight: 800;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color); /* حد أوضح للعناوين */
         }
 
         .grades-table td {
-            padding: 15px;
             font-size: 15px;
             font-weight: 700;
             border-bottom: 1px solid #f3f4f6;
@@ -285,12 +298,20 @@
 
         .fail-row {
             background-color: var(--danger-bg);
+            /* النص يبقى باللون الافتراضي (الأسود) كما في الموقع الرسمي */
+        }
+
+        .grades-table tr:last-child td {
+            border-bottom: none;
         }
 
         /* --- Responsive Design --- */
         @media (max-width: 850px) {
             .results-wrapper {
                 flex-direction: column;
+            }
+            .grades-table th, .grades-table td {
+                padding: 15px 10px;
             }
         }
     </style>
@@ -302,7 +323,7 @@
             <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية العراقية" class="logo-img">
             
             <h2>تسجيل الدخول</h2>
-            <p>اللجنة الدائمة للأمتحانات العامة لعام 2026/2025<br>يرجى إدخال المعلومات بشكل صحيح لتسجيل الدخول إلى المنصة.</p>
+            <p>اللجنة الدائمة للأمتِحانات العامة لعام 2026/2025<br>يرجى إدخال المعلومات بشكل صحيح لتسجيل الدخول إلى المنصة.</p>
 
             <form id="loginForm">
                 <div class="form-group">
@@ -333,7 +354,7 @@
                         <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية العراقية" class="logo-img">
                     </div>
                     
-                    <h4 class="exam-title">اللجنة الدائمة للأمتحانات العامة<br>لعام 2026/2025 الدور الأول</h4>
+                    <h4 class="exam-title">اللجنة الدائمة للأمتِحانات العامة<br>لعام 2026/2025 الدور الأول</h4>
                     
                     <div class="student-info-grid">
                         <strong>الاسم الرباعي</strong>
