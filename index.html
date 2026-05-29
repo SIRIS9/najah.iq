@@ -2,18 +2,33 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة النتائج - وزارة التربية العراقية</title>
+    <!-- إعدادات الشاشة لدعم الهواتف ومنع التقريب التلقائي في iOS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- إعدادات PWA -->
+    <meta name="theme-color" content="#3b8e41">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="./manifest.json">
+    
+    <!-- دعم iOS (Apple) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="نتائج الثالث">
+    <link rel="apple-touch-icon" href="./icon-192x192.png">
+
+    <title>منصة النتائج - وزارة التربية</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --primary-green: #3b8e41;
+            --primary-hover: #2e7033;
             --bg-color: #f8f9fa;
             --text-main: #111827;
             --text-muted: #6b7280;
             --border-color: #e5e7eb;
             --white: #ffffff;
-            --danger-bg: #fde8e8; /* أحمر باهت مطابق للرسمي */
+            --danger-bg: #fde8e8;
             --danger-text: #b33a3a;
         }
 
@@ -22,6 +37,8 @@
             margin: 0;
             padding: 0;
             font-family: 'Tajawal', sans-serif;
+            /* منع تظليل العناصر عند النقر في الهواتف */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -31,13 +48,17 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            /* دعم الشاشات الحديثة */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            overscroll-behavior-y: none; /* منع السحب الزائد (Bounce effect) */
         }
 
         .page {
             display: none;
             width: 100%;
             padding: 20px;
-            animation: fadeIn 0.3s ease-in-out;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .page.active {
@@ -45,31 +66,31 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- Login Page Styles --- */
+        /* --- تحسينات واجهة الدخول للموبايل --- */
         .login-container {
             background: var(--white);
             max-width: 450px;
             margin: 0 auto;
             padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 16px; /* زوايا أنعم للتطبيقات */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             text-align: center;
             border: 1px solid var(--border-color);
         }
 
         .login-container .logo-img {
-            width: 180px;
+            width: 160px;
             height: auto;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .login-container h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
+            font-size: 22px;
+            margin-bottom: 8px;
             color: var(--text-main);
             font-weight: 800;
         }
@@ -77,7 +98,7 @@
         .login-container p {
             color: var(--text-muted);
             font-size: 14px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             line-height: 1.6;
         }
 
@@ -95,25 +116,28 @@
 
         .form-group input {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 15px;
+            border-radius: 10px;
+            font-size: 16px; /* إجباري 16px لمنع الـ Zoom في نظام iOS */
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.2s ease;
+            background-color: #f9fafb;
         }
 
         .form-group input:focus {
             border-color: var(--primary-green);
+            background-color: var(--white);
+            box-shadow: 0 0 0 3px rgba(59, 142, 65, 0.1);
         }
 
         .timer {
             text-align: right;
-            font-weight: 700;
-            font-size: 14px;
-            margin-bottom: 20px;
+            font-weight: 800;
+            font-size: 15px;
+            margin-bottom: 24px;
             direction: ltr;
-            color: #000000;
+            color: var(--primary-green);
         }
 
         .btn-submit {
@@ -121,359 +145,305 @@
             background-color: var(--primary-green);
             color: var(--white);
             border: none;
-            padding: 15px;
+            padding: 16px;
             font-size: 16px;
-            font-weight: 700;
-            border-radius: 6px;
+            font-weight: 800;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(59, 142, 65, 0.2);
         }
 
-        .btn-submit:hover {
-            background-color: #2e7033;
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .footer-text {
-            margin-top: 20px;
+            margin-top: 24px;
             font-size: 12px;
             color: var(--text-muted);
         }
 
-        /* --- Results Page Styles --- */
+        /* --- تحسينات واجهة النتائج --- */
         .results-wrapper {
-            max-width: 1050px; /* تم توسيع الحاوية لتطابق العرض الرسمي */
+            max-width: 1050px;
             margin: 0 auto;
             display: flex;
             gap: 24px;
         }
 
-        .results-sidebar-container {
-            flex: 1; /* نسبة الشريط الجانبي */
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
         .results-sidebar, .results-main {
             background: var(--white);
-            border-radius: 8px;
+            border-radius: 16px;
             padding: 30px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
             border: 1px solid var(--border-color);
         }
 
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 25px;
-        }
+        .results-sidebar-container { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+        .results-main { flex: 2.2; }
 
-        .sidebar-header .logo-img {
-            width: 130px;
-            height: auto;
-        }
+        .sidebar-header { display: flex; align-items: center; justify-content: center; margin-bottom: 25px; }
+        .sidebar-header .logo-img { width: 120px; height: auto; }
 
         .exam-title {
-            text-align: center;
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--text-main);
-            margin-bottom: 30px;
-            line-height: 1.6;
+            text-align: center; font-size: 16px; font-weight: 800; color: var(--text-main);
+            margin-bottom: 30px; line-height: 1.6;
         }
 
         .student-info-grid {
-            display: grid;
-            grid-template-columns: 100px 1fr;
-            gap: 16px 12px;
-            text-align: right;
-            font-size: 14px;
-            margin-bottom: 35px;
+            display: grid; grid-template-columns: 90px 1fr; gap: 18px 12px;
+            text-align: right; font-size: 14px; margin-bottom: 35px;
         }
 
-        .student-info-grid strong {
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .student-info-grid span {
-            font-weight: 800;
-            color: var(--text-main);
-        }
+        .student-info-grid strong { color: var(--text-muted); font-weight: 500; }
+        .student-info-grid span { font-weight: 800; color: var(--text-main); }
 
         .status-badge {
-            background-color: var(--danger-bg);
-            color: var(--danger-text);
-            padding: 4px 14px;
-            border-radius: 4px;
-            font-weight: 700;
-            font-size: 13px;
+            background-color: var(--danger-bg); color: var(--danger-text);
+            padding: 6px 16px; border-radius: 6px; font-weight: 800; font-size: 14px;
             display: inline-block;
         }
 
         .btn-logout {
-            background: var(--white);
-            border: 1px solid var(--border-color);
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 700;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            transition: background-color 0.2s;
+            background: #f9fafb; border: 1px solid var(--border-color);
+            padding: 14px 20px; border-radius: 10px; cursor: pointer;
+            font-weight: 800; color: var(--danger-text);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; transition: all 0.2s ease;
         }
         
-        .btn-logout:hover {
-            background-color: var(--bg-color);
-        }
+        .btn-logout:active { background-color: var(--danger-bg); transform: scale(0.98); }
 
-        .sidebar-footer {
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 10px;
-        }
-
-        .results-main {
-            flex: 2.2; /* تكبير مساحة الجدول لتبتعد العناصر عن بعضها */
-        }
-
-        .results-main h2 {
-            text-align: right;
-            margin-bottom: 20px;
-            font-size: 20px;
-            font-weight: 800;
-        }
+        .results-main h2 { text-align: right; margin-bottom: 20px; font-size: 20px; font-weight: 800; }
 
         .warning-box {
-            background-color: var(--danger-bg);
-            color: var(--danger-text);
-            padding: 16px;
-            border-radius: 4px;
-            text-align: right;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 30px;
+            background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a;
+            padding: 16px; border-radius: 10px; text-align: right;
+            font-size: 14px; font-weight: 500; margin-bottom: 30px; line-height: 1.6;
         }
 
-        .grades-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        .grades-table { width: 100%; border-collapse: collapse; }
+        .grades-table th, .grades-table td { padding: 18px 20px; }
+        .grades-table th:first-child, .grades-table td:first-child { text-align: right; width: 50%; }
+        .grades-table th:last-child, .grades-table td:last-child { text-align: left; width: 50%; }
+        .grades-table th { color: var(--text-muted); font-size: 14px; font-weight: 700; border-bottom: 2px solid var(--border-color); }
+        .grades-table td { font-size: 16px; font-weight: 800; border-bottom: 1px solid #f3f4f6; color: var(--text-main); }
+        .fail-row td { color: var(--danger-text); background-color: rgba(253, 232, 232, 0.4); }
+        .grades-table tr:last-child td { border-bottom: none; }
 
-        .grades-table th, .grades-table td {
-            padding: 20px 25px; /* زيادة المساحة الداخلية للجدول */
-        }
-
-        .grades-table th:first-child,
-        .grades-table td:first-child {
-            text-align: right; /* إجبار المادة على اليمين */
-            width: 50%;
-        }
-
-        .grades-table th:last-child,
-        .grades-table td:last-child {
-            text-align: left; /* إجبار الدرجة على أقصى اليسار */
-            width: 50%;
-        }
-
-        .grades-table th {
-            color: var(--text-main);
-            font-size: 15px;
-            font-weight: 800;
-            border-bottom: 2px solid var(--border-color); /* حد أوضح للعناوين */
-        }
-
-        .grades-table td {
-            font-size: 15px;
-            font-weight: 700;
-            border-bottom: 1px solid #f3f4f6;
-            color: var(--text-main);
-        }
-
-        .fail-row {
-            background-color: var(--danger-bg);
-            /* النص يبقى باللون الافتراضي (الأسود) كما في الموقع الرسمي */
-        }
-
-        .grades-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* --- Responsive Design --- */
+        /* --- التصميم المتجاوب للتطبيق --- */
         @media (max-width: 850px) {
-            .results-wrapper {
-                flex-direction: column;
-            }
-            .grades-table th, .grades-table td {
-                padding: 15px 10px;
-            }
+            .results-wrapper { flex-direction: column; gap: 15px; }
+            .login-container { border: none; box-shadow: none; background: transparent; padding: 20px 10px; }
+            .page { padding: 15px; }
+            .grades-table th, .grades-table td { padding: 15px 10px; }
         }
     </style>
 </head>
 <body>
 
-    <div id="loginPage" class="page active">
+    <!-- واجهة الدخول -->
+    <div id="loginPage" class="page active" role="main">
         <div class="login-container">
-            <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية العراقية" class="logo-img">
-            
+            <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية" class="logo-img">
             <h2>تسجيل الدخول</h2>
-            <p>اللجنة الدائمة للأمتِحانات العامة لعام 2026/2025<br>يرجى إدخال المعلومات بشكل صحيح لتسجيل الدخول إلى المنصة.</p>
+            <p>اللجنة الدائمة للأمتِحانات العامة<br>يرجى إدخال المعلومات بشكل صحيح.</p>
 
-            <form id="loginForm">
+            <form id="loginForm" novalidate>
                 <div class="form-group">
-                    <label>الرقم الامتحاني</label>
-                    <input type="text" id="examNumber" placeholder="ادخل الرقم الامتحاني" required>
+                    <label for="examNumber">الرقم الامتحاني</label>
+                    <input type="number" id="examNumber" pattern="[0-9]*" inputmode="numeric" placeholder="ادخل الرقم الامتحاني" required autocomplete="off">
                 </div>
                 <div class="form-group">
-                    <label id="captchaLabel">كم حاصل جمع ؟</label>
-                    <input type="number" id="captchaAnswer" placeholder="اكتب الناتج هنا" required>
+                    <label id="captchaLabel" for="captchaAnswer">كم حاصل جمع ؟</label>
+                    <input type="number" id="captchaAnswer" pattern="[0-9]*" inputmode="numeric" placeholder="الناتج" required autocomplete="off">
                 </div>
                 
-                <div class="timer" id="timerDisplay">02:00</div>
+                <div class="timer" id="timerDisplay" aria-live="polite">02:00</div>
+                <div id="errorMsg" class="error-msg" style="color: var(--danger-text); font-size: 14px; font-weight: 700; display: none; margin-bottom: 15px; text-align: right;" role="alert">الرقم الامتحاني أو حل المسألة غير صحيح.</div>
                 
-                <div id="errorMsg" class="error-msg" style="color: #c53030; font-size: 13px; display: none; margin-bottom: 10px; text-align: right;">الرقم الامتحاني أو حل المسألة غير صحيح.</div>
-                
-                <button type="submit" class="btn-submit">تسجيل الدخول</button>
+                <button type="submit" id="submitBtn" class="btn-submit">عرض النتيجة</button>
             </form>
-            <p class="footer-text">جميع الحقوق محفوظة © 2026 وزارة التربية العراقية.</p>
         </div>
     </div>
 
-    <div id="resultsPage" class="page">
+    <!-- واجهة النتائج -->
+    <div id="resultsPage" class="page" role="main">
         <div class="results-wrapper">
-
             <div class="results-sidebar-container">
                 <div class="results-sidebar">
                     <div class="sidebar-header">
-                        <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية العراقية" class="logo-img">
+                        <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية" class="logo-img">
                     </div>
-                    
                     <h4 class="exam-title">اللجنة الدائمة للأمتِحانات العامة<br>لعام 2026/2025 الدور الأول</h4>
-                    
-                    <div class="student-info-grid">
-                        <strong>الاسم الرباعي</strong>
-                        <span>منتظر مالك اسماعيل مكطوف</span>
-                        
-                        <strong>اسم المدرسة</strong>
-                        <span>اعدادية كربلاء للبنين</span>
-                        
-                        <strong>المديرية</strong>
-                        <span>ذي قار</span>
-                        
-                        <strong>الفرع</strong>
-                        <span>علمي</span>
-                        
-                        <strong>المجموع</strong>
-                        <span>0</span>
-                        
-                        <strong>المعدل</strong>
-                        <span dir="ltr">%0</span>
-                        
-                        <strong>النتيجة النهائية</strong>
-                        <div><span class="status-badge">معيد</span></div>
-                    </div>
-
-                    <button class="btn-logout" onclick="logout()">
+                    <div class="student-info-grid" id="studentInfo"></div>
+                    <button class="btn-logout" onclick="logout()" aria-label="تسجيل الخروج">
                         تسجيل الخروج
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; transform: rotate(180deg);"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                     </button>
                 </div>
-                <div class="sidebar-footer">جميع الحقوق محفوظة © 2026 وزارة التربية العراقية</div>
             </div>
-
             <div class="results-main">
-                <h2>معلومات النتيجة</h2>
-                <div class="warning-box">
-                    ملاحظة: هذه النتيجة لا تُعد وثيقة رسمية، ويجب الاعتماد على الوثائق الورقية الصادرة من الوزارة.
-                </div>
-
+                <h2>تفاصيل النتيجة</h2>
+                <div class="warning-box">ملاحظة: هذه النتيجة لا تُعد وثيقة رسمية، ويجب الاعتماد على الوثائق الورقية الصادرة من المدرسة.</div>
                 <table class="grades-table">
-                    <thead>
-                        <tr>
-                            <th>المادة</th>
-                            <th>الدرجة</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>الاسلامية</td><td>98</td></tr>
-                        <tr><td>العربية</td><td>93</td></tr>
-                        <tr class="fail-row"><td>الانكليزية</td><td>م</td></tr>
-                        <tr class="fail-row"><td>الاحياء</td><td>م</td></tr>
-                        <tr class="fail-row"><td>الرياضيات</td><td>م</td></tr>
-                        <tr class="fail-row"><td>الكيمياء</td><td>م</td></tr>
-                        <tr class="fail-row"><td>الفيزياء</td><td>م</td></tr>
-                    </tbody>
+                    <thead><tr><th>المادة</th><th>الدرجة</th></tr></thead>
+                    <tbody id="gradesTableBody"></tbody>
                 </table>
             </div>
-
         </div>
     </div>
 
     <script>
-        const VALID_EXAM_ID = "222611510300245";
+        // --- تسجيل Service Worker لتفعيل التثبيت كـ PWA ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker Registered'))
+                    .catch(err => console.error('Service Worker Error', err));
+            });
+        }
+
+        // Configuration
+        const CAPTCHA_TIMER_SECONDS = 120;
         let currentCaptchaResult = 0;
         let timerInterval;
+
+        const DOM = {
+            loginPage: document.getElementById('loginPage'),
+            resultsPage: document.getElementById('resultsPage'),
+            loginForm: document.getElementById('loginForm'),
+            examNumber: document.getElementById('examNumber'),
+            captchaAnswer: document.getElementById('captchaAnswer'),
+            captchaLabel: document.getElementById('captchaLabel'),
+            timerDisplay: document.getElementById('timerDisplay'),
+            errorMsg: document.getElementById('errorMsg'),
+            submitBtn: document.getElementById('submitBtn'),
+            studentInfo: document.getElementById('studentInfo'),
+            gradesTableBody: document.getElementById('gradesTableBody')
+        };
 
         function generateCaptcha() {
             const num1 = Math.floor(Math.random() * 50) + 10;
             const num2 = Math.floor(Math.random() * 50) + 10;
             currentCaptchaResult = num1 + num2;
-            document.getElementById('captchaLabel').innerText = `كم حاصل جمع ${num1} + ${num2}؟`;
-            document.getElementById('captchaAnswer').value = '';
+            DOM.captchaLabel.innerText = `كم حاصل جمع ${num1} + ${num2}؟`;
+            DOM.captchaAnswer.value = '';
         }
 
-        function startTimer(durationInSeconds) {
+        function startTimer(duration) {
             clearInterval(timerInterval);
-            let timer = durationInSeconds, minutes, seconds;
-            const display = document.getElementById('timerDisplay');
-            timerInterval = setInterval(function () {
+            let timer = duration, minutes, seconds;
+            timerInterval = setInterval(() => {
                 minutes = parseInt(timer / 60, 10);
                 seconds = parseInt(timer % 60, 10);
                 minutes = minutes < 10 ? "0" + minutes : minutes;
                 seconds = seconds < 10 ? "0" + seconds : seconds;
-                display.textContent = minutes + ":" + seconds;
+                DOM.timerDisplay.textContent = `${minutes}:${seconds}`;
                 if (--timer < 0) {
-                    timer = durationInSeconds;
                     generateCaptcha();
+                    timer = duration;
                 }
             }, 1000);
         }
 
-        window.onload = () => {
-            generateCaptcha();
-            startTimer(120);
-        };
+        async function authenticateStudent(examNumber) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (examNumber === "222611510300245") {
+                        resolve({
+                            status: 'success',
+                            data: {
+                                name: "منتظر مالك اسماعيل مكطوف", school: "اعدادية كربلاء للبنين",
+                                directorate: "ذي قار", branch: "علمي", total: "0", average: "0", finalStatus: "معيد",
+                                subjects: [
+                                    { name: "الاسلامية", score: "98", isFailed: false },
+                                    { name: "العربية", score: "93", isFailed: false },
+                                    { name: "الانكليزية", score: "م", isFailed: true },
+                                    { name: "الاحياء", score: "م", isFailed: true },
+                                    { name: "الرياضيات", score: "م", isFailed: true },
+                                    { name: "الكيمياء", score: "م", isFailed: true },
+                                    { name: "الفيزياء", score: "م", isFailed: true }
+                                ]
+                            }
+                        });
+                    } else { reject({ status: 'error', message: 'الرقم الامتحاني غير صحيح.' }); }
+                }, 600);
+            });
+        }
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        function renderResults(data) {
+            DOM.studentInfo.innerHTML = `
+                <strong>الاسم</strong><span>${data.name}</span>
+                <strong>المدرسة</strong><span>${data.school}</span>
+                <strong>المديرية</strong><span>${data.directorate}</span>
+                <strong>الفرع</strong><span>${data.branch}</span>
+                <strong>المجموع</strong><span>${data.total}</span>
+                <strong>المعدل</strong><span dir="ltr">%${data.average}</span>
+                <strong>النتيجة</strong><div><span class="status-badge">${data.finalStatus}</span></div>
+            `;
+            DOM.gradesTableBody.innerHTML = data.subjects.map(sub => `
+                <tr class="${sub.isFailed ? 'fail-row' : ''}">
+                    <td>${sub.name}</td><td>${sub.score}</td>
+                </tr>
+            `).join('');
+        }
+
+        window.onload = () => { generateCaptcha(); startTimer(CAPTCHA_TIMER_SECONDS); };
+
+        DOM.loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            const examInput = document.getElementById('examNumber').value.trim();
-            const captchaInput = parseInt(document.getElementById('captchaAnswer').value.trim(), 10);
-            const errorElement = document.getElementById('errorMsg');
+            
+            // إخفاء لوحة المفاتيح في الهاتف عند الضغط على زر الإرسال
+            document.activeElement.blur(); 
 
-            if (examInput === VALID_EXAM_ID && captchaInput === currentCaptchaResult) {
-                errorElement.style.display = 'none';
-                document.getElementById('loginPage').classList.remove('active');
-                document.getElementById('resultsPage').classList.add('active');
-                window.scrollTo(0, 0);
-            } else {
-                errorElement.style.display = 'block';
-                generateCaptcha(); 
+            const examInput = DOM.examNumber.value.trim();
+            const captchaInput = parseInt(DOM.captchaAnswer.value.trim(), 10);
+            
+            if (!examInput) return showError("يرجى إدخال الرقم الامتحاني.");
+            if (captchaInput !== currentCaptchaResult) {
+                showError("حل المسألة غير صحيح. حاول مرة أخرى.");
+                return generateCaptcha();
+            }
+
+            DOM.errorMsg.style.display = 'none';
+            DOM.submitBtn.disabled = true;
+            DOM.submitBtn.textContent = 'جاري التحقق...';
+
+            try {
+                const response = await authenticateStudent(examInput);
+                if (response.status === 'success') {
+                    renderResults(response.data);
+                    DOM.loginPage.classList.remove('active');
+                    DOM.resultsPage.classList.add('active');
+                    window.scrollTo(0, 0);
+                }
+            } catch (error) {
+                showError(error.message);
+                generateCaptcha();
+            } finally {
+                DOM.submitBtn.disabled = false;
+                DOM.submitBtn.textContent = 'عرض النتيجة';
             }
         });
 
+        function showError(message) {
+            DOM.errorMsg.textContent = message;
+            DOM.errorMsg.style.display = 'block';
+        }
+
         function logout() {
-            document.getElementById('examNumber').value = '';
-            document.getElementById('errorMsg').style.display = 'none';
-            document.getElementById('resultsPage').classList.remove('active');
-            document.getElementById('loginPage').classList.add('active');
-            generateCaptcha();
-            startTimer(120);
+            DOM.loginForm.reset();
+            DOM.errorMsg.style.display = 'none';
+            DOM.resultsPage.classList.remove('active');
+            DOM.loginPage.classList.add('active');
+            generateCaptcha(); startTimer(CAPTCHA_TIMER_SECONDS);
             window.scrollTo(0, 0);
         }
     </script>
