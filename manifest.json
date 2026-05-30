@@ -1,6 +1,6 @@
 {
-  "name": "نتائج الامتحانات - وزارة التربية",
-  "short_name": "النتائج",
+  "name": "نجاح",
+  "short_name": "نجاح",
   "description": "منصة الاستعلام عن نتائج الامتحانات الوزارية",
   "start_url": "./index.html",
   "display": "standalone",
