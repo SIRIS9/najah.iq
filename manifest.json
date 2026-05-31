@@ -2,7 +2,7 @@
   "name": "نجاح",
   "short_name": "نجاح",
   "description": "منصة الاستعلام عن نتائج الامتحانات الوزارية",
-  "start_url": "./index.html",
+  "start_url": "./index2.html",
   "display": "standalone",
   "background_color": "#f8f9fa",
   "theme_color": "#3b8e41",
