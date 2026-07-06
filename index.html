@@ -2,31 +2,35 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <!-- ========================================== -->
-    <!-- الإضافات الخاصة بتفعيل التطبيق (PWA) فقط -->
-    <meta name="theme-color" content="#3b8e41">
-    <link rel="manifest" href="manifest.json">
+    <!-- إعدادات PWA (تتطلب وجود ملفات manifest و sw.js في الإنتاج) -->
+    <meta name="theme-color" content="#ffffff">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="نتائج الثالث">
-    <link rel="apple-touch-icon" href="icon-192x192.png">
-    <!-- ========================================== -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="نتائج الطلاب">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icon-192x192.png">
 
     <title>منصة النتائج - وزارة التربية العراقية</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-green: #3b8e41;
-            --bg-color: #f8f9fa;
+            --bg-body: #f5f5f5;
+            --bg-card: #ffffff;
             --text-main: #111827;
             --text-muted: #6b7280;
             --border-color: #e5e7eb;
-            --white: #ffffff;
-            --danger-bg: #fde8e8; /* أحمر باهت مطابق للرسمي */
+            --green-btn: #608246;
+            --green-light: #6d995a;
+            --green-dark: #375628;
+            --green-login: #548039;
+            --timer-color: #dca73a;
+            --danger-bg: #fde8e8;
             --danger-text: #b33a3a;
+            --input-focus: #60a5fa;
         }
 
         * {
@@ -34,469 +38,431 @@
             margin: 0;
             padding: 0;
             font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-body);
             color: var(--text-main);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
         }
 
-        .page {
+        /* --- SPA Screen Management --- */
+        .screen {
             display: none;
             width: 100%;
-            padding: 20px;
-            animation: fadeIn 0.3s ease-in-out;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .page.active {
+        .screen.active {
             display: block;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- Login Page Styles --- */
-        .login-container {
-            background: var(--white);
-            max-width: 450px;
-            margin: 0 auto;
-            padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
-
-        .login-container .logo-img {
-            width: 180px;
-            height: auto;
-            margin-bottom: 20px;
-        }
-
-        .login-container h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: var(--text-main);
-            font-weight: 800;
-        }
-
-        .login-container p {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-
-        .form-group {
-            text-align: right;
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .form-group input {
+        /* --- Main App Container --- */
+        .app-container {
+            background-color: var(--bg-card);
             width: 100%;
-            padding: 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 15px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus {
-            border-color: var(--primary-green);
-        }
-
-        .timer {
-            text-align: right;
-            font-weight: 700;
-            font-size: 14px;
-            margin-bottom: 20px;
-            direction: ltr;
-            color: #000000;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background-color: var(--primary-green);
-            color: var(--white);
-            border: none;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: 700;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .btn-submit:hover {
-            background-color: #2e7033;
-        }
-
-        .footer-text {
-            margin-top: 20px;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        /* --- Results Page Styles --- */
-        .results-wrapper {
-            max-width: 1050px; /* تم توسيع الحاوية لتطابق العرض الرسمي */
-            margin: 0 auto;
-            display: flex;
-            gap: 24px;
-        }
-
-        .results-sidebar-container {
-            flex: 1; /* نسبة الشريط الجانبي */
+            max-width: 420px;
+            min-height: 85vh;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            overflow: hidden;
+            margin: 0 auto;
         }
 
-        .results-sidebar, .results-main {
-            background: var(--white);
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            border: 1px solid var(--border-color);
-        }
-
-        .sidebar-header {
+        .app-content {
+            padding: 40px 24px;
+            flex: 1;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 25px;
+            flex-direction: column;
         }
 
-        .sidebar-header .logo-img {
-            width: 130px;
-            height: auto;
-        }
-
-        .exam-title {
+        /* --- Typography & Headers --- */
+        .header-ministry {
             text-align: center;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 800;
-            color: var(--text-main);
+            line-height: 1.3;
             margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .student-info-grid {
-            display: grid;
-            grid-template-columns: 100px 1fr;
-            gap: 16px 12px;
-            text-align: right;
-            font-size: 14px;
-            margin-bottom: 35px;
-        }
-
-        .student-info-grid strong {
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .student-info-grid span {
-            font-weight: 800;
             color: var(--text-main);
+            position: relative;
         }
 
-        .status-badge {
-            background-color: var(--danger-bg);
-            color: var(--danger-text);
-            padding: 4px 14px;
-            border-radius: 4px;
-            font-weight: 700;
-            font-size: 13px;
-            display: inline-block;
-        }
-
-        .btn-logout {
-            background: var(--white);
-            border: 1px solid var(--border-color);
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 700;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            transition: background-color 0.2s;
-        }
+        .header-ministry.green-text { color: var(--green-login); }
         
-        .btn-logout:hover {
-            background-color: var(--bg-color);
+        .menu-icon {
+            position: absolute; right: 0; top: 5px;
+            display: flex; flex-direction: column; gap: 5px; cursor: pointer;
+        }
+        .menu-icon span { display: block; width: 22px; height: 2.5px; background-color: var(--green-btn); border-radius: 2px; }
+
+        .screen-title { text-align: center; font-size: 22px; font-weight: 800; margin-bottom: 10px; line-height: 1.4; }
+        .screen-subtitle { text-align: center; font-size: 14px; font-weight: 500; color: var(--text-muted); line-height: 1.6; margin-bottom: 35px; }
+
+        /* --- Forms & Selectors --- */
+        .select-wrapper { position: relative; margin-bottom: 20px; }
+        select {
+            width: 100%; padding: 18px 20px; font-size: 15px; font-weight: 800; color: var(--text-main);
+            background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px;
+            appearance: none; outline: none; cursor: pointer;
+        }
+        .select-wrapper::after {
+            content: ''; position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+            border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #666; pointer-events: none;
         }
 
-        .sidebar-footer {
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 10px;
+        .btn-main {
+            width: 100%; padding: 18px; font-size: 16px; font-weight: 800; color: #ffffff;
+            border: none; border-radius: 8px; cursor: pointer; transition: opacity 0.2s;
         }
+        .btn-main:active { opacity: 0.85; transform: scale(0.98); }
+        .btn-main:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+        .bg-green-btn { background-color: var(--green-btn); }
+        .bg-green-login { background-color: var(--green-login); }
 
-        .results-main {
-            flex: 2.2; /* تكبير مساحة الجدول لتبتعد العناصر عن بعضها */
+        /* --- Stage Buttons --- */
+        .stage-btn {
+            display: flex; align-items: center; justify-content: space-between; width: 100%;
+            padding: 20px; border-radius: 16px; border: none; color: #fff; margin-bottom: 15px;
+            cursor: pointer; transition: transform 0.2s;
         }
+        .stage-btn:active { transform: scale(0.98); }
+        .stage-btn.third-grade { background-color: var(--green-light); }
+        .stage-btn.sixth-grade { background-color: var(--green-dark); }
+        .circle-badge { width: 45px; height: 45px; border: 1.5px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; }
+        .btn-text-content { flex: 1; text-align: right; padding-right: 15px; }
+        .main-text { font-size: 18px; font-weight: 800; display: block; margin-bottom: 4px; }
+        .sub-text { font-size: 12px; font-weight: 500; opacity: 0.9; }
+        .arrow-icon { width: 35px; height: 35px; background-color: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        .results-main h2 {
-            text-align: right;
-            margin-bottom: 20px;
-            font-size: 20px;
-            font-weight: 800;
-        }
+        /* --- Login Form --- */
+        .form-group { margin-bottom: 20px; text-align: right; }
+        .form-group label { display: block; font-weight: 800; font-size: 14px; margin-bottom: 10px; }
+        .form-control { width: 100%; padding: 16px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        .form-control:focus { border-color: var(--input-focus); }
+        .captcha-wrapper { position: relative; }
+        .captcha-wrapper input { padding-left: 50px; }
+        .captcha-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #52525b; pointer-events: none; }
+        .timer-text { text-align: right; color: var(--timer-color); font-size: 13px; font-weight: 800; margin-bottom: 24px; direction: rtl; }
 
-        .warning-box {
-            background-color: var(--danger-bg);
-            color: var(--danger-text);
-            padding: 16px;
-            border-radius: 4px;
-            text-align: right;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 30px;
-        }
+        .footer-copyright { margin-top: auto; text-align: center; font-size: 11px; color: var(--text-muted); padding-top: 30px; font-weight: 500; }
 
-        .grades-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        /* --- Results Interface --- */
+        .results-wrapper { max-width: 1050px; margin: 0 auto; display: flex; gap: 24px; }
+        .results-sidebar, .results-main { background: var(--bg-card); border-radius: 16px; padding: 30px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04); border: 1px solid var(--border-color); }
+        .results-sidebar-container { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+        .results-main { flex: 2.2; }
+        .sidebar-header { display: flex; align-items: center; justify-content: center; margin-bottom: 25px; }
+        .sidebar-header .logo-img { width: 120px; height: auto; }
+        .student-info-grid { display: grid; grid-template-columns: 90px 1fr; gap: 18px 12px; text-align: right; font-size: 14px; margin-bottom: 35px; }
+        .student-info-grid strong { color: var(--text-muted); font-weight: 500; }
+        .student-info-grid span { font-weight: 800; color: var(--text-main); }
+        .status-badge { background-color: var(--danger-bg); color: var(--danger-text); padding: 6px 16px; border-radius: 6px; font-weight: 800; font-size: 14px; display: inline-block; }
+        .btn-logout { background: #f9fafb; border: 1px solid var(--border-color); padding: 14px 20px; border-radius: 10px; cursor: pointer; font-weight: 800; color: var(--danger-text); display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; transition: all 0.2s ease; }
+        .btn-logout:active { background-color: var(--danger-bg); transform: scale(0.98); }
+        .results-main h2 { text-align: right; margin-bottom: 20px; font-size: 20px; font-weight: 800; }
+        .warning-box { background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 16px; border-radius: 10px; text-align: right; font-size: 14px; font-weight: 500; margin-bottom: 30px; line-height: 1.6; }
+        .grades-table { width: 100%; border-collapse: collapse; }
+        .grades-table th, .grades-table td { padding: 18px 20px; }
+        .grades-table th:first-child, .grades-table td:first-child { text-align: right; width: 50%; }
+        .grades-table th:last-child, .grades-table td:last-child { text-align: left; width: 50%; }
+        .grades-table th { color: var(--text-muted); font-size: 14px; font-weight: 700; border-bottom: 2px solid var(--border-color); }
+        .grades-table td { font-size: 16px; font-weight: 800; border-bottom: 1px solid #f3f4f6; color: var(--text-main); }
+        .fail-row td { color: var(--danger-text); background-color: rgba(253, 232, 232, 0.4); }
+        .grades-table tr:last-child td { border-bottom: none; }
 
-        .grades-table th, .grades-table td {
-            padding: 20px 25px; /* زيادة المساحة الداخلية للجدول */
-        }
-
-        .grades-table th:first-child,
-        .grades-table td:first-child {
-            text-align: right; /* إجبار المادة على اليمين */
-            width: 50%;
-        }
-
-        .grades-table th:last-child,
-        .grades-table td:last-child {
-            text-align: left; /* إجبار الدرجة على أقصى اليسار */
-            width: 50%;
-        }
-
-        .grades-table th {
-            color: var(--text-main);
-            font-size: 15px;
-            font-weight: 800;
-            border-bottom: 2px solid var(--border-color); /* حد أوضح للعناوين */
-        }
-
-        .grades-table td {
-            font-size: 15px;
-            font-weight: 700;
-            border-bottom: 1px solid #f3f4f6;
-            color: var(--text-main);
-        }
-
-        .fail-row {
-            background-color: var(--danger-bg);
-            /* النص يبقى باللون الافتراضي (الأسود) كما في الموقع الرسمي */
-        }
-
-        .grades-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* --- Responsive Design --- */
         @media (max-width: 850px) {
-            .results-wrapper {
-                flex-direction: column;
-            }
-            .grades-table th, .grades-table td {
-                padding: 15px 10px;
-            }
+            .results-wrapper { flex-direction: column; gap: 15px; }
+            .grades-table th, .grades-table td { padding: 15px 10px; }
         }
     </style>
 </head>
 <body>
 
-    <div id="loginPage" class="page active">
-        <div class="login-container">
-            <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية العراقية" class="logo-img">
-            
-            <h2>تسجيل الدخول</h2>
-            <p>اللجنة الدائمة للأمتِحانات العامة لعام 2026/2025<br>يرجى إدخال المعلومات بشكل صحيح لتسجيل الدخول إلى المنصة.</p>
-
-            <form id="loginForm">
-                <div class="form-group">
-                    <label>الرقم الامتحاني</label>
-                    <input type="text" id="examNumber" placeholder="ادخل الرقم الامتحاني" required>
+    <!-- 1. شاشة اختيار المحافظة -->
+    <div id="screenGov" class="screen active">
+        <div class="app-container">
+            <div class="app-content">
+                <div class="header-ministry">
+                    جمهورية العراق<br>وزارة التربية
+                    <div class="menu-icon"><span></span><span></span><span></span></div>
                 </div>
-                <div class="form-group">
-                    <label id="captchaLabel">كم حاصل جمع ؟</label>
-                    <input type="number" id="captchaAnswer" placeholder="اكتب الناتج هنا" required>
+                <h1 class="screen-title">تحقق من نتيجتك<br>الأمتحانية بسهولة ضمن نتائج<br>الامتحانات الوزارية</h1>
+                <p class="screen-subtitle">يُسعدنا أن نوفر لك هذه الخدمة الإلكترونية لعرض نتائجك الأمتحانية بسهولة وسرعة يرجى اختيار مديريتك التعليمية من القائمة أدناه ثم النقر على زر الانتقال الى واجهة الطالب للمتابعة</p>
+                
+                <div class="select-wrapper">
+                    <select id="directorateSelect">
+                        <option value="karkh1">مديرية تربية الكرخ الأولى</option>
+                        <option value="karkh2">مديرية تربية الكرخ الثانية</option>
+                        <option value="karkh3">مديرية تربية الكرخ الثالثة</option>
+                        <option value="rusafa1">مديرية تربية الرصافة الأولى</option>
+                        <option value="rusafa2">مديرية تربية الرصافة الثانية</option>
+                        <option value="rusafa3">مديرية تربية الرصافة الثالثة</option>
+                        <option value="basra">مديرية تربية البصرة</option>
+                        <option value="nineveh">مديرية تربية نينوى</option>
+                        <option value="salahaldin">مديرية تربية صلاح الدين</option>
+                        <option value="anbar">مديرية تربية الانبار</option>
+                        <option value="kirkuk">مديرية تربية كركوك</option>
+                        <option value="diyala">مديرية تربية ديالى</option>
+                        <option value="thi_qar" selected>مديرية تربية ذي قار</option>
+                        <option value="babil">مديرية تربية بابل</option>
+                        <option value="qadisiyah">مديرية تربية القادسية</option>
+                        <option value="najaf">مديرية تربية النجف الاشرف</option>
+                        <option value="wasit">مديرية تربية واسط</option>
+                        <option value="karbala">مديرية تربية كربلاء المقدسة</option>
+                        <option value="maysan">مديرية تربية ميسان</option>
+                        <option value="muthanna">مديرية تربية المثنى</option>
+                        <option value="erbil">مديرية تربية أربيل</option>
+                        <option value="sulaymaniyah">مديرية تربية سليمانية</option>
+                        <option value="duhok">مديرية تربية دهوك</option>
+                        <option value="outside">مديرية تربية خارج العراق</option>
+                    </select>
                 </div>
-                
-                <div class="timer" id="timerDisplay">02:00</div>
-                
-                <div id="errorMsg" class="error-msg" style="color: #c53030; font-size: 13px; display: none; margin-bottom: 10px; text-align: right;">الرقم الامتحاني أو حل المسألة غير صحيح.</div>
-                
-                <button type="submit" class="btn-submit">تسجيل الدخول</button>
-            </form>
-            <p class="footer-text">جميع الحقوق محفوظة © 2026 وزارة التربية العراقية.</p>
+                <button class="btn-main bg-green-btn" onclick="navigateTo('screenStage')">الانتقال الى واجهة الطالب</button>
+            </div>
         </div>
     </div>
 
-    <div id="resultsPage" class="page">
-        <div class="results-wrapper">
+    <!-- 2. شاشة اختيار المرحلة -->
+    <div id="screenStage" class="screen">
+        <div class="app-container">
+            <div class="app-content">
+                <div class="header-ministry green-text">جمهورية العراق<br>وزارة التربية</div>
+                <h1 class="screen-title">اختر المرحلة الدراسية</h1>
+                <p class="screen-subtitle">يرجى اختيار المرحلة الدراسية لتسجيل الدخول إلى المنصة</p>
+                
+                <button class="stage-btn third-grade" onclick="setStageAndNavigate('third')">
+                    <div class="circle-badge">3rd</div>
+                    <div class="btn-text-content">
+                        <span class="main-text">الصف الثالث المتوسط</span>
+                        <span class="sub-text">انقر للدخول</span>
+                    </div>
+                    <div class="arrow-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg></div>
+                </button>
 
+                <button class="stage-btn sixth-grade" onclick="setStageAndNavigate('sixth')">
+                    <div class="circle-badge">6th</div>
+                    <div class="btn-text-content">
+                        <span class="main-text">الصف السادس الإعدادي</span>
+                        <span class="sub-text">انقر للدخول</span>
+                    </div>
+                    <div class="arrow-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg></div>
+                </button>
+                <div class="footer-copyright">جميع الحقوق محفوظة © 2026 وزارة التربية العراقية</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. شاشة تسجيل الدخول -->
+    <div id="screenLogin" class="screen">
+        <div class="app-container">
+            <div class="app-content">
+                <div class="header-ministry">جمهورية العراق<br>وزارة التربية</div>
+                <h1 class="screen-title">تسجيل الدخول</h1>
+                <p class="screen-subtitle" id="loginSubtitle">اللجنة الدائمة للامتحانات العامة لعام 2026/2025<br>يرجى إدخال المعلومات بشكل صحيح لتسجيل الدخول الى المنصة</p>
+                
+                <form id="loginForm" novalidate>
+                    <div class="form-group">
+                        <label>الرقم الامتحاني</label>
+                        <input type="number" id="examNumber" class="form-control" placeholder="ادخل الرقم الامتحاني" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label id="captchaLabel">ما هو ناتج جمع ؟</label>
+                        <div class="captcha-wrapper">
+                            <input type="number" id="captchaAnswer" class="form-control" placeholder="ادخل ناتج الجمع هنا" required autocomplete="off">
+                            <div class="captcha-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="8" y="8" width="8" height="2"></rect><line x1="9" y1="14" x2="9" y2="14.01"></line><line x1="15" y1="14" x2="15" y2="14.01"></line><line x1="9" y1="18" x2="9" y2="18.01"></line><line x1="15" y1="18" x2="15" y2="18.01"></line></svg></div>
+                        </div>
+                    </div>
+                    <div class="timer-text" id="timerDisplay">ينتهي هذا التحقق خلال 02:00</div>
+                    <div id="errorMsg" style="color: var(--danger-text); font-size: 14px; font-weight: 700; display: none; margin-bottom: 15px; text-align: right;">الرقم الامتحاني أو حل المسألة غير صحيح.</div>
+                    <button type="submit" id="submitBtn" class="btn-main bg-green-login">تسجيل الدخول</button>
+                </form>
+                <div class="footer-copyright">جميع الحقوق محفوظة © 2026 وزارة التربية العراقية</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. شاشة النتائج -->
+    <div id="screenResults" class="screen">
+        <div class="results-wrapper">
             <div class="results-sidebar-container">
                 <div class="results-sidebar">
-                    <div class="sidebar-header">
-                        <img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="شعار وزارة التربية العراقية" class="logo-img">
-                    </div>
-                    
-                    <h4 class="exam-title">اللجنة الدائمة للأمتِحانات العامة<br>لعام 2026/2025 الدور الأول</h4>
-                    
-                    <div class="student-info-grid">
-                        <strong>الاسم الرباعي</strong>
-                        <span>منتظر مالك اسماعيل مكطوف</span>
-                        
-                        <strong>اسم المدرسة</strong>
-                        <span>اعدادية كربلاء للبنين</span>
-                        
-                        <strong>المديرية</strong>
-                        <span>ذي قار</span>
-                        
-                        <strong>الفرع</strong>
-                        <span>علمي</span>
-                        
-                        <strong>المجموع</strong>
-                        <span>0</span>
-                        
-                        <strong>المعدل</strong>
-                        <span dir="ltr">%0</span>
-                        
-                        <strong>النتيجة النهائية</strong>
-                        <div><span class="status-badge">معيد</span></div>
-                    </div>
-
+                    <div class="sidebar-header"><img src="https://3rd-grade-result.najah.iq/images/sign_logo.png" alt="الشعار" class="logo-img" style="width:100px;"></div>
+                    <h4 class="screen-title" style="font-size:16px;">اللجنة الدائمة للأمتِحانات العامة<br>لعام 2026/2025 الدور الأول</h4>
+                    <div class="student-info-grid" id="studentInfo"></div>
                     <button class="btn-logout" onclick="logout()">
                         تسجيل الخروج
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; transform: rotate(180deg);"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px; transform:rotate(180deg);"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                     </button>
                 </div>
-                <div class="sidebar-footer">جميع الحقوق محفوظة © 2026 وزارة التربية العراقية</div>
             </div>
-
             <div class="results-main">
-                <h2>معلومات النتيجة</h2>
-                <div class="warning-box">
-                    ملاحظة: هذه النتيجة لا تُعد وثيقة رسمية، ويجب الاعتماد على الوثائق الورقية الصادرة من الوزارة.
-                </div>
-
+                <h2>تفاصيل النتيجة</h2>
+                <div class="warning-box">ملاحظة: هذه النتيجة لا تُعد وثيقة رسمية، ويجب الاعتماد على الوثائق الورقية الصادرة من المدرسة.</div>
                 <table class="grades-table">
-                    <thead>
-                        <tr>
-                            <th>المادة</th>
-                            <th>الدرجة</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>الاسلامية</td><td>98</td></tr>
-                        <tr><td>العربية</td><td>93</td></tr>
-                        <tr class="fail-row"><td>الانكليزية</td><td>م</td></tr>
-                        <tr class="fail-row"><td>الاحياء</td><td>م</td></tr>
-                        <tr class="fail-row"><td>الرياضيات</td><td>م</td></tr>
-                        <tr class="fail-row"><td>الكيمياء</td><td>م</td></tr>
-                        <tr class="fail-row"><td>الفيزياء</td><td>م</td></tr>
-                    </tbody>
+                    <thead><tr><th>المادة</th><th>الدرجة</th></tr></thead>
+                    <tbody id="gradesTableBody"></tbody>
                 </table>
             </div>
-
         </div>
     </div>
 
     <script>
-        const VALID_EXAM_ID = "222611510300245";
+        // --- State Management ---
+        let appState = { directorate: '', stage: '' };
+        const CAPTCHA_TIMER_SECONDS = 120;
         let currentCaptchaResult = 0;
         let timerInterval;
 
+        // --- Navigation ---
+        function navigateTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function setStageAndNavigate(stage) {
+            appState.directorate = document.getElementById('directorateSelect').value;
+            appState.stage = stage;
+            
+            const stageName = stage === 'third' ? 'الثالث المتوسط' : 'السادس الإعدادي';
+            document.getElementById('loginSubtitle').innerHTML = `اللجنة الدائمة للامتحانات العامة (${stageName})<br>يرجى إدخال المعلومات بشكل صحيح لتسجيل الدخول الى المنصة`;
+            
+            generateCaptcha();
+            startTimer(CAPTCHA_TIMER_SECONDS);
+            navigateTo('screenLogin');
+        }
+
+        // --- Captcha & Timer ---
         function generateCaptcha() {
             const num1 = Math.floor(Math.random() * 50) + 10;
             const num2 = Math.floor(Math.random() * 50) + 10;
             currentCaptchaResult = num1 + num2;
-            document.getElementById('captchaLabel').innerText = `كم حاصل جمع ${num1} + ${num2}؟`;
+            document.getElementById('captchaLabel').innerText = `ما هو ناتج جمع ${num1} + ${num2} ؟`;
             document.getElementById('captchaAnswer').value = '';
         }
 
-        function startTimer(durationInSeconds) {
+        function startTimer(duration) {
             clearInterval(timerInterval);
-            let timer = durationInSeconds, minutes, seconds;
-            const display = document.getElementById('timerDisplay');
-            timerInterval = setInterval(function () {
+            let timer = duration, minutes, seconds;
+            timerInterval = setInterval(() => {
                 minutes = parseInt(timer / 60, 10);
                 seconds = parseInt(timer % 60, 10);
                 minutes = minutes < 10 ? "0" + minutes : minutes;
                 seconds = seconds < 10 ? "0" + seconds : seconds;
-                display.textContent = minutes + ":" + seconds;
-                if (--timer < 0) {
-                    timer = durationInSeconds;
-                    generateCaptcha();
-                }
+                document.getElementById('timerDisplay').textContent = `ينتهي هذا التحقق خلال ${minutes}:${seconds}`;
+                if (--timer < 0) { generateCaptcha(); timer = duration; }
             }, 1000);
         }
 
-        window.onload = () => {
-            generateCaptcha();
-            startTimer(120);
-        };
+        // --- Authentication & Mock Data Injection ---
+        async function authenticateStudent(examNumber) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (examNumber === "222611510300245") {
+                        
+                        let branchName = appState.stage === 'third' ? "عام" : "علمي";
+                        
+                        // تطبيق الدرجات المطلوبة لكلا المرحلتين
+                        let studentSubjects = [
+                            { name: "التربية الاسلامية", score: "98", isFailed: false },
+                            { name: "اللغة العربية", score: "96", isFailed: false },
+                            { name: "اللغة الانكليزية", score: "م", isFailed: true },
+                            { name: "الاحياء", score: "94", isFailed: false },
+                            { name: "الرياضيات", score: "م", isFailed: true },
+                            { name: "الكيمياء", score: "90", isFailed: false },
+                            { name: "الفيزياء", score: "م", isFailed: true }
+                        ];
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+                        resolve({
+                            status: 'success',
+                            data: {
+                                name: "منتظر مالك اسماعيل مكطوف", 
+                                school: "اعدادية كربلاء للبنين",
+                                directorate: document.getElementById('directorateSelect').options[document.getElementById('directorateSelect').selectedIndex].text.replace('مديرية تربية ', ''),
+                                branch: branchName,
+                                total: "0", average: "0", finalStatus: "معيد",
+                                subjects: studentSubjects
+                            }
+                        });
+                    } else { reject({ status: 'error', message: 'الرقم الامتحاني غير صحيح.' }); }
+                }, 600);
+            });
+        }
+
+        function renderResults(data) {
+            document.getElementById('studentInfo').innerHTML = `
+                <strong>الاسم</strong><span>${data.name}</span>
+                <strong>المدرسة</strong><span>${data.school}</span>
+                <strong>المديرية</strong><span>${data.directorate}</span>
+                <strong>الفرع</strong><span>${data.branch}</span>
+                <strong>المجموع</strong><span>${data.total}</span>
+                <strong>المعدل</strong><span dir="ltr">%${data.average}</span>
+                <strong>النتيجة</strong><div><span class="status-badge">${data.finalStatus}</span></div>
+            `;
+            document.getElementById('gradesTableBody').innerHTML = data.subjects.map(sub => `
+                <tr class="${sub.isFailed ? 'fail-row' : ''}"><td>${sub.name}</td><td>${sub.score}</td></tr>
+            `).join('');
+        }
+
+        // --- Form Handling ---
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            document.activeElement.blur(); 
+            
             const examInput = document.getElementById('examNumber').value.trim();
             const captchaInput = parseInt(document.getElementById('captchaAnswer').value.trim(), 10);
-            const errorElement = document.getElementById('errorMsg');
+            const errorMsg = document.getElementById('errorMsg');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (!examInput) { errorMsg.textContent = "يرجى إدخال الرقم الامتحاني."; errorMsg.style.display = 'block'; return; }
+            if (captchaInput !== currentCaptchaResult) {
+                errorMsg.textContent = "حل المسألة غير صحيح. حاول مرة أخرى."; errorMsg.style.display = 'block';
+                return generateCaptcha();
+            }
 
-            if (examInput === VALID_EXAM_ID && captchaInput === currentCaptchaResult) {
-                errorElement.style.display = 'none';
-                document.getElementById('loginPage').classList.remove('active');
-                document.getElementById('resultsPage').classList.add('active');
-                window.scrollTo(0, 0);
-            } else {
-                errorElement.style.display = 'block';
-                generateCaptcha(); 
+            errorMsg.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'جاري التحقق...';
+
+            try {
+                const response = await authenticateStudent(examInput);
+                if (response.status === 'success') {
+                    renderResults(response.data);
+                    navigateTo('screenResults');
+                }
+            } catch (error) {
+                errorMsg.textContent = error.message;
+                errorMsg.style.display = 'block';
+                generateCaptcha();
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'تسجيل الدخول';
             }
         });
 
         function logout() {
-            document.getElementById('examNumber').value = '';
+            document.getElementById('loginForm').reset();
             document.getElementById('errorMsg').style.display = 'none';
-            document.getElementById('resultsPage').classList.remove('active');
-            document.getElementById('loginPage').classList.add('active');
-            generateCaptcha();
-            startTimer(120);
-            window.scrollTo(0, 0);
+            clearInterval(timerInterval);
+            navigateTo('screenGov');
         }
 
-        // ==========================================
-        // كود تفعيل الـ Service Worker لـ PWA
-        // ==========================================
+        // --- Service Worker Init ---
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker Registered'))
-                    .catch(err => console.error('Service Worker Error', err));
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
             });
         }
     </script>
