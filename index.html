@@ -15,7 +15,6 @@
 
     <title>منصة النتائج - وزارة التربية العراقية</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --bg-body: #f5f5f5;
@@ -298,7 +297,7 @@
         <div class="results-wrapper">
             <div class="results-sidebar-container">
                 <div class="results-sidebar">
-                    <div class="sidebar-header"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/%D8%B4%D8%B9%D8%A7%D8%B1_%D9%88%D8%B2%D8%A7%D8%B1%D8%A9_%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%8A%D8%A9_%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82%D9%8A%D8%A9.svg/3840px-%D8%B4%D8%B9%D8%A7%D8%B1_%D9%88%D8%B2%D8%A7%D8%B1%D8%A9_%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%8A%D8%A9_%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82%D9%8A%D8%A9.svg.png"alt="الشعار" class="logo-img" style="width:100px;"></div>
+                    <div class="sidebar-header"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/%D8%B4%D8%B9%D8%A7%D8%B1_%D9%88%D8%B2%D8%A7%D8%B1%D8%A9_%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%8A%D8%A9_%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82%D9%8A%D8%A9.svg" alt="الشعار" class="logo-img" style="width:100px;"></div>
                     <h4 class="screen-title" style="font-size:16px;">اللجنة الدائمة للأمتِحانات العامة<br>لعام 2026/2025 الدور الأول</h4>
                     <div class="student-info-grid" id="studentInfo"></div>
                     <button class="btn-logout" onclick="logout()">
@@ -374,14 +373,14 @@
                         
                         let branchName = appState.stage === 'third' ? "عام" : "علمي";
                         
-                        // تطبيق الدرجات المطلوبة لكلا المرحلتين
+                        // تطبيق الدرجات المحدثة لكلا المرحلتين
                         let studentSubjects = [
-                            { name: "التربية الاسلامية", score: "98", isFailed: false },
-                            { name: "اللغة العربية", score: "96", isFailed: false },
+                            { name: "التربية الاسلامية", score: "100", isFailed: false },
+                            { name: "اللغة العربية", score: "93", isFailed: false },
                             { name: "اللغة الانكليزية", score: "م", isFailed: true },
-                            { name: "الاحياء", score: "94", isFailed: false },
+                            { name: "الاحياء", score: "95", isFailed: false },
                             { name: "الرياضيات", score: "م", isFailed: true },
-                            { name: "الكيمياء", score: "90", isFailed: false },
+                            { name: "الكيمياء", score: "92", isFailed: false },
                             { name: "الفيزياء", score: "م", isFailed: true }
                         ];
 
