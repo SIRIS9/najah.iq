@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>تسجيل الدخول - نتائج الطلاب</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/index.css">
+    <style>
+        #altchaWrapper {
+            margin: 20px auto;
+            max-width: 100%;
+            text-align: center;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .altcha-custom {
+            border: 1px solid #e0e0e0 !important;
+            border-radius: 8px !important;
+            padding: 20px 15px 15px 15px !important;
+            background-color: #fff !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: fit-content;
+            margin: 0 auto;
+            min-width: 240px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+        }
+        .altcha-logo-img {
+            width: 120px;
+            height: 45px;
+            background-image: url("https://najah.iq/images/ur-logo.png"); 
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .altcha-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        .altcha-main:hover {
+            background-color: #f9f9f9;
+        }
+        .altcha-label {
+            font-family: 'Almarai', sans-serif !important;
+            font-size: 15px !important;
+            color: #666;
+            font-weight: 700;
+            user-select: none;
+        }
+        .altcha-checkbox {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .altcha-checkbox input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+            accent-color: #007bff;
+        }
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <img src="assets/logo2.png" alt="شعار الوزارة" class="logo">
+        <h1>جمهورية العراق</h1>
+        <h3>وزارة التربية - اللجنة الدائمة للامتحانات العامة</h3>
+        <p class="subtitle">منصة إعلان النتائج</p>
+
+        <form id="loginForm" onsubmit="return false;">
+            <div class="form-group">
+                <label for="studentNumber">الرقم الامتحاني</label>
+                <input type="text" id="studentNumber" name="studentNumber" placeholder="أدخل الرقم الامتحاني" inputmode="numeric" pattern="[0-9]{15}" minlength="15" maxlength="15" required title="يجب أن يتكون الرقم الامتحاني من 15 رقمًا">
+            </div>
+            <div class="form-group">
+                <label for="password">الرقم السري </label>
+                <input type="password" id="password" name="password" placeholder="أدخل الرقم السري" inputmode="numeric" pattern="[0-9]{14}" minlength="14" maxlength="14" required title="يجب أن يتكون الرقم السري من 14 رقمًا">
+            </div>
+
+            <div id="altchaWrapper">
+                <div class="altcha-custom">
+                    <div class="altcha-logo-img"></div>
+                    <div class="altcha-main" onclick="handleAltchaClick()">
+                        <div class="altcha-label" id="altcha_label">انا احب العراق</div>
+                        <div class="altcha-checkbox">
+                            <input type="checkbox" id="altcha_checkbox" readonly onclick="event.preventDefault();">
+                        </div>
+                        <div class="spinner" id="altcha_spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <p id="modal-message"></p>
+            <div id="countdown-timer" class="hidden"></div>
+            <button onclick="closeModal()">حسنا</button>
+        </div>
+    </div>
+
+    <script>
+        let isVerifying = false;
+
+        function handleAltchaClick() {
+            if (isVerifying) return;
+
+            const sn = document.getElementById('studentNumber').value;
+            const pw = document.getElementById('password').value;
+            
+            // Validate input format constraints
+            if (sn.length !== 15 || pw.length !== 14) {
+                showModal("يرجى إدخال الرقم الامتحاني (15 رقم) والرقم السري (14 رقم) بشكل صحيح.");
+                return;
+            }
+
+            // Authenticate exact student examination credentials
+            if (sn !== "222611510300245" || pw !== "26166777021890") {
+                showModal("البيانات المدخلة غير صحيحة، يرجى التأكد من الرقم الامتحاني والرقم السري.");
+                return;
+            }
+
+            isVerifying = true;
+            const label = document.getElementById('altcha_label');
+            const spinner = document.getElementById('altcha_spinner');
+            const checkbox = document.getElementById('altcha_checkbox');
+
+            label.textContent = "جاري التحقق...";
+            spinner.style.display = "block";
+
+            setTimeout(() => {
+                label.textContent = "تم التحقق";
+                spinner.style.display = "none";
+                checkbox.checked = true;
+                
+                setTimeout(() => {
+                    showCountdownModal("تم تسجيل الدخول بنجاح، جاري التحويل إلى صفحة النتائج", 3);
+                }, 500);
+            }, 1500);
+        }
+
+        function showModal(message) {
+            const modal = document.getElementById('modal');
+            const msg = document.getElementById('modal-message');
+            const timer = document.getElementById('countdown-timer');
+            msg.textContent = message;
+            timer.classList.add('hidden');
+            modal.classList.remove('hidden');
+        }
+
+        function showCountdownModal(message, seconds) {
+            const modal = document.getElementById('modal');
+            const msg = document.getElementById('modal-message');
+            const timer = document.getElementById('countdown-timer');
+            
+            msg.textContent = message;
+            timer.textContent = seconds;
+            timer.classList.remove('hidden');
+            modal.classList.remove('hidden');
+            
+            const interval = setInterval(() => {
+                seconds--;
+                timer.textContent = seconds;
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    window.location.href = "results.html";
+                }
+            }, 1000);
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            isVerifying = false;
+            document.getElementById('altcha_label').textContent = "انا احب العراق";
+            document.getElementById('altcha_checkbox').checked = false;
+        }
+    </script>
+</body>
+</html>

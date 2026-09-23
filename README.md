@@ -1,2 +1,1 @@
 # najah.iq
-t
