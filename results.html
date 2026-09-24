@@ -5,6 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>نتائج الطالب</title>
+
+    <!-- Immediate synchronous authorization verification -->
+    <script>
+        (function() {
+            const token = sessionStorage.getItem("najah_auth_token");
+            if (token !== "authenticated_session_valid") {
+                window.location.replace("index.html");
+            }
+        })();
+    </script>
+
+    <!-- Hide document visually by default to prevent Flash of Unauthenticated Content (FOUC) -->
+    <style>
+        html {
+            visibility: hidden;
+        }
+    </style>
+
+    <!-- Enforce noscript security to prevent bypassing via disabling JavaScript -->
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=index.html">
+        <style>
+            html { display: none !important; }
+        </style>
+    </noscript>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
@@ -76,8 +102,19 @@
         </table>
     </div>
     <div class="button-wrapper">
-        <button class="back-button" onclick="window.location.href='index.html'">↩️ العودة للصفحة الرئيسية</button>
+        <button class="back-button" onclick="handleLogout()">↩️ العودة للصفحة الرئيسية</button>
         <button class="print-button" onclick="window.print()">🖨️ طباعة النتيجة</button>
     </div>
+
+    <script>
+        // Make page visible once authorization is confirmed
+        document.documentElement.style.visibility = "visible";
+
+        // Invalidate session on logout and redirect back to login
+        function handleLogout() {
+            sessionStorage.removeItem("najah_auth_token");
+            window.location.replace("index.html");
+        }
+    </script>
 </body>
 </html>

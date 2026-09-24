@@ -192,6 +192,8 @@
                 timer.textContent = seconds;
                 if (seconds <= 0) {
                     clearInterval(interval);
+                    // Persist session authentication flag in sessionStorage
+                    sessionStorage.setItem("najah_auth_token", "authenticated_session_valid");
                     window.location.href = "results.html";
                 }
             }, 1000);
